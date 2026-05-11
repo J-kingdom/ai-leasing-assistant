@@ -27,9 +27,34 @@ export default async function DashboardPage() {
     )
   }
 
+  const typedLeads = (leads ?? []) as Lead[]
+  const total       = typedLeads.length
+  const qualified   = typedLeads.filter(l => l.qualification_status === 'qualified').length
+  const pending     = typedLeads.filter(l => l.qualification_status === 'pending').length
+  const unqualified = typedLeads.filter(l => l.qualification_status === 'unqualified').length
+
   return (
     <main className="p-8 max-w-7xl mx-auto">
       <h1 className="text-2xl font-semibold mb-6">Leads</h1>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+        <div className="rounded-lg border border-zinc-200 bg-white p-4">
+          <p className="text-sm text-zinc-500">Total Leads</p>
+          <p className="mt-1 text-3xl font-semibold text-zinc-800">{total}</p>
+        </div>
+        <div className="rounded-lg border border-zinc-200 bg-white p-4">
+          <p className="text-sm text-zinc-500">Qualified</p>
+          <p className="mt-1 text-3xl font-semibold text-green-600">{qualified}</p>
+        </div>
+        <div className="rounded-lg border border-zinc-200 bg-white p-4">
+          <p className="text-sm text-zinc-500">Pending</p>
+          <p className="mt-1 text-3xl font-semibold text-zinc-500">{pending}</p>
+        </div>
+        <div className="rounded-lg border border-zinc-200 bg-white p-4">
+          <p className="text-sm text-zinc-500">Unqualified</p>
+          <p className="mt-1 text-3xl font-semibold text-red-600">{unqualified}</p>
+        </div>
+      </div>
 
       {!leads || leads.length === 0 ? (
         <p className="text-zinc-500">No leads yet.</p>
@@ -49,7 +74,7 @@ export default async function DashboardPage() {
               </tr>
             </thead>
             <tbody>
-              {(leads as Lead[]).map((lead, i) => (
+              {typedLeads.map((lead, i) => (
                 <tr
                   key={lead.id}
                   className={i % 2 === 0 ? 'bg-white hover:bg-zinc-50' : 'bg-zinc-50 hover:bg-zinc-100'}
