@@ -7,7 +7,7 @@ type Status = 'idle' | 'submitting' | 'qualifying' | 'success' | 'error'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const inputBase =
-  'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors'
+  'w-full rounded-lg border px-3 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors'
 const inputNormal = `${inputBase} border-zinc-300`
 const inputError  = `${inputBase} border-red-400`
 
@@ -125,10 +125,10 @@ export default function SubmitPage() {
 
   if (status === 'success') {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-start justify-center px-4 py-16">
-        <div className="w-full max-w-xl bg-white rounded-xl border border-zinc-200 p-8 text-center">
+      <div className="min-h-screen bg-zinc-100 flex items-start justify-center px-4 py-16">
+        <div className="w-full max-w-xl bg-white rounded-xl border border-zinc-200 p-8 shadow-lg text-center">
           <p className="text-green-500 text-5xl mb-4">✓</p>
-          <h1 className="text-2xl font-semibold text-zinc-800 mb-2">
+          <h1 className="text-2xl font-semibold text-zinc-900 mb-2">
             Thank you, {submittedName}!
           </h1>
           <p className="text-zinc-500 text-sm mb-8">
@@ -146,9 +146,9 @@ export default function SubmitPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex items-start justify-center px-4 py-16">
-      <div className="w-full max-w-xl bg-white rounded-xl border border-zinc-200 p-8">
-        <h1 className="text-2xl font-semibold text-zinc-800 mb-1">Get in Touch</h1>
+    <div className="min-h-screen bg-zinc-100 flex items-start justify-center px-4 py-16">
+      <div className="w-full max-w-xl bg-white rounded-xl border border-zinc-200 p-8 shadow-lg">
+        <h1 className="text-2xl font-semibold text-zinc-900 mb-1">Get in Touch</h1>
         <p className="text-sm text-zinc-500 mb-8">
           Tell us about what you&apos;re looking for and we&apos;ll be in touch.
         </p>
@@ -156,7 +156,7 @@ export default function SubmitPage() {
         <form onSubmit={handleSubmit} noValidate className="space-y-5">
           {/* Name */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-zinc-700 mb-1">
+            <label htmlFor="name" className="block text-sm font-medium text-zinc-800 mb-1">
               Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -173,7 +173,7 @@ export default function SubmitPage() {
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-zinc-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-zinc-800 mb-1">
               Email <span className="text-red-500">*</span>
             </label>
             <input
@@ -190,7 +190,7 @@ export default function SubmitPage() {
 
           {/* Phone */}
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-zinc-700 mb-1">
+            <label htmlFor="phone" className="block text-sm font-medium text-zinc-800 mb-1">
               Phone
             </label>
             <input
@@ -206,7 +206,7 @@ export default function SubmitPage() {
 
           {/* Message */}
           <div>
-            <label htmlFor="message" className="block text-sm font-medium text-zinc-700 mb-1">
+            <label htmlFor="message" className="block text-sm font-medium text-zinc-800 mb-1">
               Message <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -222,13 +222,13 @@ export default function SubmitPage() {
 
           {/* Property interest */}
           <div>
-            <label htmlFor="property_interest" className="block text-sm font-medium text-zinc-700 mb-1">
+            <label htmlFor="property_interest" className="block text-sm font-medium text-zinc-800 mb-1">
               Property interest
             </label>
             <input
               id="property_interest"
               type="text"
-              placeholder="e.g. 2-bedroom apartment, city centre"
+              placeholder="e.g. 2-bed flat, city centre"
               value={propertyInterest}
               onChange={e => setPropertyInterest(e.target.value)}
               disabled={busy}
@@ -239,23 +239,27 @@ export default function SubmitPage() {
           {/* Budget + Move-in date */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="budget" className="block text-sm font-medium text-zinc-700 mb-1">
-                Budget ($/month)
+              <label htmlFor="budget" className="block text-sm font-medium text-zinc-800 mb-1">
+                Budget (£/month)
               </label>
-              <input
-                id="budget"
-                type="number"
-                min="0"
-                step="50"
-                placeholder="e.g. 1500"
-                value={budget}
-                onChange={e => setBudget(e.target.value)}
-                disabled={busy}
-                className={inputNormal}
-              />
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400 pointer-events-none select-none">£</span>
+                <input
+                  id="budget"
+                  type="number"
+                  min="0"
+                  step="50"
+                  placeholder="e.g. 1500"
+                  value={budget}
+                  onChange={e => setBudget(e.target.value)}
+                  disabled={busy}
+                  style={{ paddingLeft: '1.75rem' }}
+                  className={inputNormal}
+                />
+              </div>
             </div>
             <div>
-              <label htmlFor="move_in_date" className="block text-sm font-medium text-zinc-700 mb-1">
+              <label htmlFor="move_in_date" className="block text-sm font-medium text-zinc-800 mb-1">
                 Desired move-in date
               </label>
               <input

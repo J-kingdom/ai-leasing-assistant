@@ -4,12 +4,12 @@ import type { Lead, QualifyLeadResult } from '@/lib/types'
 
 const openai = new OpenAI({ apiKey: serverEnv.OPENAI_API_KEY })
 
-const SYSTEM_PROMPT = `You are an AI assistant for a residential leasing company. Your job is to assess inbound lead inquiries and return a structured qualification in JSON.
+const SYSTEM_PROMPT = `You are an AI assistant for a UK residential lettings company. All budgets are in GBP (£) per calendar month (pcm). Your job is to assess inbound lead enquiries and return a structured qualification in JSON.
 
 Scoring rubric (0–100):
 - 0–39: low intent or missing critical information
 - 40–69: moderate intent, some details present
-- 70–100: clear intent, budget and timeline specified
+- 70–100: clear intent, budget (pcm) and timeline specified
 
 Rules:
 - Never invent or assume property-specific facts not present in the inquiry.
@@ -37,7 +37,7 @@ Message: ${lead.message}
 Additional context:
 - Phone: ${lead.phone ?? 'not provided'}
 - Property interest: ${lead.property_interest ?? 'not specified'}
-- Budget: ${lead.budget != null ? `$${lead.budget}` : 'not specified'}
+- Budget: ${lead.budget != null ? `£${lead.budget} pcm` : 'not specified'}
 - Move-in date: ${lead.move_in_date ?? 'not specified'}
 - Source: ${lead.source ?? 'unknown'}
 
