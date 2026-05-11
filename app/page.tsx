@@ -1,65 +1,305 @@
-import Image from "next/image";
+import Link from 'next/link'
+
+const PROBLEMS = [
+  {
+    headline: 'Qualified leads go cold',
+    body: 'While your team reads through low-intent enquiries, motivated tenants receive no reply and move on to the next agency.',
+  },
+  {
+    headline: 'Inconsistent follow-ups',
+    body: 'Reply quality and tone vary across team members, creating an unprofessional experience that costs you trust and deals.',
+  },
+  {
+    headline: 'Information scattered everywhere',
+    body: 'Critical tenant details are buried across inboxes, spreadsheets, and portals — with no single view of your pipeline.',
+  },
+]
+
+const FEATURES: { title: string; desc: string; iconPath: string }[] = [
+  {
+    title: 'Instant Qualification Score',
+    desc: 'Every enquiry scored 0–100 using AI. Qualified, unqualified, or pending — decided in seconds.',
+    iconPath: 'm3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z',
+  },
+  {
+    title: 'Smart Reply Drafts',
+    desc: 'Regenerate personalised replies in Professional, Friendly, or Direct tone — for Email or WhatsApp.',
+    iconPath: 'M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z',
+  },
+  {
+    title: 'Missing Information Alerts',
+    desc: 'Amber warning badges automatically surface what the tenant forgot to provide, so you ask the right questions.',
+    iconPath: 'M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z',
+  },
+  {
+    title: 'GBP & PCM Native',
+    desc: 'Built for the UK rental market. Budgets, language, and AI context are all calibrated for British lettings.',
+    iconPath: 'M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+  },
+  {
+    title: 'Centralised Pipeline',
+    desc: 'All inbound leads in one place — searchable by name or email, filterable by status, sortable by score.',
+    iconPath: 'M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-3.75.125V6.375A1.125 1.125 0 0 1 3.375 5.25h17.25a1.125 1.125 0 0 1 1.125 1.125V18.375A1.125 1.125 0 0 1 20.625 19.5m-16.5 0H6',
+  },
+  {
+    title: 'One-Click Re-qualification',
+    desc: 'Re-run AI analysis on any lead instantly. Changed your criteria? Refresh scores without re-importing anything.',
+    iconPath: 'M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99',
+  },
+]
+
+const STEPS = [
+  { title: 'Tenant submits enquiry',  desc: 'Via your website form, captured instantly.' },
+  { title: 'AI qualifies the lead',   desc: 'Scored 0–100. Status set. Missing info flagged.' },
+  { title: 'Agent reviews dashboard', desc: 'Full summary, notes, and score at a glance.' },
+  { title: 'Reply draft copied',      desc: 'Tone and channel selected. Ready to send.' },
+  { title: 'Lead progresses',         desc: 'Status updated. Pipeline stays clean.' },
+]
+
+const MOCK_LEADS = [
+  { name: 'Sarah Mitchell', status: 'qualified'   as const, score: 82, budget: '£2,200 pcm', date: '2 May 2026', next: 'Schedule viewings in Clapham' },
+  { name: "James O'Brien",  status: 'qualified'   as const, score: 71, budget: '£950 pcm',   date: '5 May 2026', next: 'Send property shortlist' },
+  { name: 'Priya Sharma',   status: 'unqualified' as const, score: 22, budget: '—',           date: '7 May 2026', next: 'Send qualification questionnaire' },
+]
+
+const mockStatusStyles = {
+  qualified:   'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20',
+  unqualified: 'bg-red-50 text-red-600 ring-1 ring-inset ring-red-500/20',
+  pending:     'bg-zinc-50 text-zinc-600 ring-1 ring-inset ring-zinc-500/20',
+}
+
+const STAT_CARDS = [
+  { label: 'Total',       value: '5', cls: 'text-zinc-900' },
+  { label: 'Qualified',   value: '2', cls: 'text-green-600' },
+  { label: 'Pending',     value: '1', cls: 'text-zinc-400' },
+  { label: 'Unqualified', value: '2', cls: 'text-red-500' },
+]
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="flex flex-col">
+
+      {/* ── Hero ─────────────────────────────────────────────────── */}
+      <section className="bg-zinc-950 px-6 py-24 sm:py-32">
+        <div className="max-w-4xl mx-auto text-center">
+          <span className="inline-flex items-center rounded-full border border-zinc-700 px-3 py-1 text-xs font-medium text-zinc-400 mb-8">
+            Built for UK Letting Agencies
+          </span>
+          <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-white mb-6 leading-tight">
+            Qualify every lead.<br />Reply in seconds.
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+            AI Leasing Assistant automatically scores inbound tenant enquiries, surfaces missing
+            information, and drafts personalised replies — so your team focuses on the right leads.
           </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              href="/dashboard"
+              className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+            >
+              View Dashboard →
+            </Link>
+            <Link
+              href="/submit"
+              className="rounded-lg border border-zinc-700 bg-zinc-800 px-5 py-2.5 text-sm font-medium text-zinc-200 hover:bg-zinc-700 transition-colors"
+            >
+              Submit a Lead
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* ── Social proof strip ────────────────────────────────────── */}
+      <div className="border-y border-zinc-200 bg-zinc-50 py-4 px-6">
+        <p className="text-center text-xs font-medium uppercase tracking-widest text-zinc-400">
+          Trusted by forward-thinking letting agencies
+        </p>
+      </div>
+
+      {/* ── Problem ──────────────────────────────────────────────── */}
+      <section className="bg-white px-6 py-20">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">The Problem</p>
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-16 max-w-xl">
+            Your inbox is costing you deals
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
+            {PROBLEMS.map((p) => (
+              <div key={p.headline}>
+                <p className="text-base font-semibold text-zinc-900 mb-2">{p.headline}</p>
+                <p className="text-sm text-zinc-500 leading-relaxed">{p.body}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* ── Features ─────────────────────────────────────────────── */}
+      <section className="bg-zinc-50 px-6 py-20">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">Features</p>
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-12 max-w-xl">
+            Everything your team needs to close leads faster
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {FEATURES.map((f) => (
+              <div key={f.title} className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
+                <div className="w-9 h-9 rounded-lg bg-zinc-100 flex items-center justify-center mb-4">
+                  <svg className="w-5 h-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d={f.iconPath} />
+                  </svg>
+                </div>
+                <p className="text-sm font-semibold text-zinc-900 mb-1.5">{f.title}</p>
+                <p className="text-sm text-zinc-500 leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Workflow ─────────────────────────────────────────────── */}
+      <section className="bg-white px-6 py-20">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">How it works</p>
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-16 max-w-xl">
+            From enquiry to reply in under a minute
+          </h2>
+          <div className="relative">
+            <div className="absolute top-4 left-[5%] right-[5%] h-px bg-zinc-100 hidden sm:block" />
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-8">
+              {STEPS.map((step, i) => (
+                <div key={step.title} className="flex flex-col items-start sm:items-center text-left sm:text-center">
+                  <div className="relative z-10 w-8 h-8 rounded-full bg-white border border-zinc-200 flex items-center justify-center text-xs font-semibold text-zinc-400 mb-4 shrink-0">
+                    {i + 1}
+                  </div>
+                  <p className="text-sm font-semibold text-zinc-900 mb-1">{step.title}</p>
+                  <p className="text-xs text-zinc-500 leading-relaxed">{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Mock Dashboard ───────────────────────────────────────── */}
+      <section className="bg-zinc-950 px-6 py-20">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">See it in action</p>
+          <h2 className="text-3xl font-semibold tracking-tight text-white mb-12 max-w-xl">
+            A dashboard built for letting agents
+          </h2>
+
+          {/* Browser chrome mock */}
+          <div className="rounded-xl overflow-hidden border border-zinc-700 shadow-2xl">
+            <div className="bg-zinc-800 px-4 py-3 flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500/50" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+              <div className="w-3 h-3 rounded-full bg-green-500/50" />
+              <div className="ml-4 h-5 w-48 rounded bg-zinc-700" />
+            </div>
+
+            <div className="bg-zinc-50 p-5">
+              {/* Stat cards */}
+              <div className="grid grid-cols-4 gap-3 mb-4">
+                {STAT_CARDS.map(({ label, value, cls }) => (
+                  <div key={label} className="rounded-lg border border-zinc-200 bg-white p-3 shadow-sm">
+                    <p className="text-[10px] font-medium uppercase tracking-wide text-zinc-400">{label}</p>
+                    <p className={`mt-1 text-xl font-semibold tabular-nums ${cls}`}>{value}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Leads table */}
+              <div className="rounded-lg border border-zinc-200 bg-white overflow-hidden shadow-sm">
+                <table className="w-full text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-zinc-100">
+                      {['Name', 'Status', 'Score', 'Budget', 'Date', 'Next Action'].map((col) => (
+                        <th key={col} className="px-3 py-2.5 text-left font-medium uppercase tracking-wide text-zinc-400">
+                          {col}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-100">
+                    {MOCK_LEADS.map((lead) => (
+                      <tr key={lead.name} className="hover:bg-zinc-50 transition-colors">
+                        <td className="px-3 py-2.5 font-medium text-zinc-900 whitespace-nowrap">{lead.name}</td>
+                        <td className="px-3 py-2.5">
+                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${mockStatusStyles[lead.status]}`}>
+                            {lead.status}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2.5 tabular-nums font-medium text-zinc-700">{lead.score}</td>
+                        <td className="px-3 py-2.5 text-zinc-500 whitespace-nowrap">{lead.budget}</td>
+                        <td className="px-3 py-2.5 text-zinc-400 whitespace-nowrap">{lead.date}</td>
+                        <td className="px-3 py-2.5">
+                          <div className="max-w-[140px] truncate text-zinc-500">{lead.next}</div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800 px-5 py-2.5 text-sm font-medium text-zinc-200 hover:bg-zinc-700 transition-colors"
+            >
+              Open Dashboard →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA strip ────────────────────────────────────────────── */}
+      <section className="bg-zinc-50 border-t border-zinc-200 px-6 py-20">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-4">
+            Start qualifying leads today
+          </h2>
+          <p className="text-base text-zinc-500 mb-10">
+            Turn tenant enquiries into qualified, actionable leads.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              href="/dashboard"
+              className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+            >
+              View Dashboard
+            </Link>
+            <Link
+              href="/submit"
+              className="rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
+            >
+              Submit a Test Lead
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ───────────────────────────────────────────────── */}
+      <footer className="bg-zinc-950 border-t border-zinc-800">
+        <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div>
+            <p className="text-sm font-semibold text-white">AI Leasing Assistant</p>
+            <p className="text-sm text-zinc-500 mt-0.5">AI-powered lettings lead management</p>
+          </div>
+          <nav className="flex items-center gap-6">
+            <Link href="/dashboard" className="text-sm text-zinc-500 hover:text-white transition-colors">Dashboard</Link>
+            <Link href="/submit"    className="text-sm text-zinc-500 hover:text-white transition-colors">Submit Lead</Link>
+          </nav>
+        </div>
+        <div className="border-t border-zinc-800">
+          <div className="max-w-6xl mx-auto px-6 py-4">
+            <p className="text-xs text-zinc-600">© 2026 AI Leasing Assistant</p>
+          </div>
+        </div>
+      </footer>
+
     </div>
-  );
+  )
 }
