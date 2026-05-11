@@ -21,7 +21,7 @@ type Props = { q: string; status: string; sort: string }
 export function DashboardControls({ q, status, sort }: Props) {
   const router   = useRouter()
   const pathname = usePathname()
-  const timer    = useRef<ReturnType<typeof setTimeout>>()
+  const timer    = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   function push(updates: Partial<{ q: string; status: string; sort: string }>) {
     const next = { q, status, sort, ...updates }
@@ -59,7 +59,7 @@ export function DashboardControls({ q, status, sort }: Props) {
           defaultValue={q}
           placeholder="Search name or email…"
           onChange={e => {
-            clearTimeout(timer.current)
+            if (timer.current !== null) clearTimeout(timer.current)
             const val = e.target.value
             timer.current = setTimeout(() => push({ q: val }), 300)
           }}
