@@ -11,5 +11,6 @@ function requireEnv(name: string): string {
 }
 
 export const serverEnv = {
-  OPENAI_API_KEY: requireEnv('OPENAI_API_KEY'),
+  OPENAI_API_KEY:            requireEnv('OPENAI_API_KEY'),
+  SUPABASE_SERVICE_ROLE_KEY: requireEnv('SUPABASE_SERVICE_ROLE_KEY'),
 } as const
