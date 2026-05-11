@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase'
 import type { Lead } from '@/lib/types'
 import { CopyButton } from './CopyButton'
 import { LeadActions } from './LeadActions'
+import { ReplyCard } from './ReplyCard'
 
 const statusStyles: Record<Lead['qualification_status'], string> = {
   pending:     'bg-zinc-50 text-zinc-600 ring-1 ring-inset ring-zinc-500/20',
@@ -129,24 +130,11 @@ export default async function LeadDetailPage({
                   </div>
                 </div>
 
-                {/* AI suggested reply */}
-                {l.suggested_reply && (
-                  <div className="flex gap-3 flex-row-reverse">
-                    <div className="shrink-0 w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-semibold text-white">
-                      AI
-                    </div>
-                    <div className="flex-1 min-w-0 flex flex-col items-end">
-                      <div className="flex items-baseline gap-2 mb-2">
-                        <span className="text-xs text-zinc-400">Suggested reply · draft</span>
-                      </div>
-                      <div className="rounded-xl rounded-tr-none bg-blue-50 border border-blue-100 px-4 py-3 text-sm text-zinc-800 whitespace-pre-wrap leading-relaxed max-w-prose">
-                        {l.suggested_reply}
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
+
+            {/* Reply draft */}
+            <ReplyCard leadId={l.id} initialReply={l.suggested_reply} />
 
             {/* AI Analysis — collapsible */}
             {hasAnalysis && (
