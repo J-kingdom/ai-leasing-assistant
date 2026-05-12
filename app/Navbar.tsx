@@ -14,9 +14,9 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 h-14 flex items-center border-b border-zinc-800 bg-zinc-950">
       <div className="flex items-center gap-8 w-full max-w-7xl mx-auto px-8">
-        <span className="text-sm font-semibold tracking-tight text-white">
+        <Link href="/" className="text-sm font-semibold tracking-tight text-white hover:text-zinc-300 transition-colors">
           LettingsCopilot
-        </span>
+        </Link>
         <nav className="flex items-center gap-1">
           {navLinks.map(({ label, href }) => {
             const active = pathname === href || pathname.startsWith(href + '/')
