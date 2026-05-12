@@ -5,9 +5,9 @@ import { useRef } from 'react'
 
 const STATUS_TABS = [
   { label: 'All',          value: 'all' },
-  { label: 'Qualified',    value: 'qualified' },
-  { label: 'Pending',      value: 'pending' },
-  { label: 'Unqualified',  value: 'unqualified' },
+  { label: 'High Intent',  value: 'high_intent' },
+  { label: 'Needs Info',   value: 'needs_info' },
+  { label: 'Low Fit',      value: 'low_fit' },
 ] as const
 
 const SORT_OPTIONS = [

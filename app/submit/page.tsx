@@ -16,19 +16,63 @@ function FieldError({ msg }: { msg?: string }) {
   return <p className="mt-1 text-sm text-red-600">{msg}</p>
 }
 
+function RadioGroup({
+  name,
+  value,
+  onChange,
+  disabled,
+}: {
+  name: string
+  value: boolean | null
+  onChange: (v: boolean | null) => void
+  disabled: boolean
+}) {
+  return (
+    <div className="flex gap-4">
+      {(['yes', 'no'] as const).map(opt => {
+        const val = opt === 'yes'
+        const checked = value === val
+        return (
+          <label key={opt} className="flex items-center gap-1.5 cursor-pointer select-none">
+            <input
+              type="radio"
+              name={name}
+              value={opt}
+              checked={checked}
+              onChange={() => onChange(val)}
+              disabled={disabled}
+              className="accent-blue-600"
+            />
+            <span className="text-sm text-zinc-700">{opt === 'yes' ? 'Yes' : 'No'}</span>
+          </label>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function SubmitPage() {
   const [status, setStatus]           = useState<Status>('idle')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [serverError, setServerError] = useState<string | null>(null)
   const [submittedName, setSubmittedName] = useState('')
 
-  const [name, setName]                       = useState('')
-  const [email, setEmail]                     = useState('')
-  const [phone, setPhone]                     = useState('')
-  const [message, setMessage]                 = useState('')
+  // Core fields
+  const [name, setName]                         = useState('')
+  const [email, setEmail]                       = useState('')
+  const [phone, setPhone]                       = useState('')
+  const [message, setMessage]                   = useState('')
   const [propertyInterest, setPropertyInterest] = useState('')
-  const [budget, setBudget]                   = useState('')
-  const [moveInDate, setMoveInDate]           = useState('')
+  const [budget, setBudget]                     = useState('')
+  const [moveInDate, setMoveInDate]             = useState('')
+
+  // Affordability fields
+  const [employmentStatus, setEmploymentStatus]     = useState('')
+  const [applicantIncome, setApplicantIncome]       = useState('')
+  const [partnerIncome, setPartnerIncome]           = useState('')
+  const [numOccupants, setNumOccupants]             = useState('')
+  const [guarantorAvailable, setGuarantorAvailable] = useState<boolean | null>(null)
+  const [pets, setPets]                             = useState<boolean | null>(null)
 
   const busy = status === 'submitting' || status === 'qualifying'
 
@@ -53,6 +97,12 @@ export default function SubmitPage() {
     setPropertyInterest('')
     setBudget('')
     setMoveInDate('')
+    setEmploymentStatus('')
+    setApplicantIncome('')
+    setPartnerIncome('')
+    setNumOccupants('')
+    setGuarantorAvailable(null)
+    setPets(null)
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -66,15 +116,21 @@ export default function SubmitPage() {
     setStatus('submitting')
 
     const body: Record<string, unknown> = {
-      name: name.trim(),
-      email: email.trim(),
+      name:    name.trim(),
+      email:   email.trim(),
       message: message.trim(),
-      source: 'web_form',
+      source:  'web_form',
     }
-    if (phone.trim())           body.phone             = phone.trim()
-    if (propertyInterest.trim()) body.property_interest = propertyInterest.trim()
-    if (moveInDate)              body.move_in_date      = moveInDate
-    if (budget !== '')           body.budget            = Number(budget)
+    if (phone.trim())            body.phone              = phone.trim()
+    if (propertyInterest.trim()) body.property_interest  = propertyInterest.trim()
+    if (moveInDate)              body.move_in_date       = moveInDate
+    if (budget !== '')           body.budget             = Number(budget)
+    if (employmentStatus)        body.employment_status  = employmentStatus
+    if (applicantIncome !== '')  body.applicant_income   = Number(applicantIncome)
+    if (partnerIncome !== '')    body.partner_income     = Number(partnerIncome)
+    if (numOccupants !== '')     body.num_occupants      = Number(numOccupants)
+    if (guarantorAvailable !== null) body.guarantor_available = guarantorAvailable
+    if (pets !== null)           body.pets               = pets
 
     let leadId: string
     try {
@@ -134,10 +190,7 @@ export default function SubmitPage() {
           <p className="text-zinc-500 text-sm mb-8">
             Your enquiry has been received and our team will be in touch shortly.
           </p>
-          <button
-            onClick={resetForm}
-            className="text-sm text-blue-600 hover:underline"
-          >
+          <button onClick={resetForm} className="text-sm text-blue-600 hover:underline">
             Submit another enquiry
           </button>
         </div>
@@ -270,6 +323,119 @@ export default function SubmitPage() {
                 disabled={busy}
                 className={inputNormal}
               />
+            </div>
+          </div>
+
+          {/* ── Affordability section ─────────────────────────────────── */}
+          <div className="border-t border-zinc-100 pt-5">
+            <p className="text-sm font-medium text-zinc-800 mb-1">About your situation</p>
+            <p className="text-xs text-zinc-400 mb-4">Optional — helps us assess your application faster.</p>
+
+            <div className="space-y-4">
+              {/* Employment status */}
+              <div>
+                <label htmlFor="employment_status" className="block text-sm font-medium text-zinc-800 mb-1">
+                  Employment status
+                </label>
+                <select
+                  id="employment_status"
+                  value={employmentStatus}
+                  onChange={e => setEmploymentStatus(e.target.value)}
+                  disabled={busy}
+                  className={`${inputNormal} bg-white`}
+                >
+                  <option value="">Select…</option>
+                  <option value="employed">Employed</option>
+                  <option value="self_employed">Self-employed</option>
+                  <option value="student">Student</option>
+                  <option value="unemployed">Not currently employed</option>
+                  <option value="retired">Retired</option>
+                </select>
+              </div>
+
+              {/* Income grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="applicant_income" className="block text-sm font-medium text-zinc-800 mb-1">
+                    Your monthly income (£ gross)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400 pointer-events-none select-none">£</span>
+                    <input
+                      id="applicant_income"
+                      type="number"
+                      min="0"
+                      step="100"
+                      placeholder="e.g. 3500"
+                      value={applicantIncome}
+                      onChange={e => setApplicantIncome(e.target.value)}
+                      disabled={busy}
+                      style={{ paddingLeft: '1.75rem' }}
+                      className={inputNormal}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="partner_income" className="block text-sm font-medium text-zinc-800 mb-1">
+                    Partner / co-applicant income (£)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400 pointer-events-none select-none">£</span>
+                    <input
+                      id="partner_income"
+                      type="number"
+                      min="0"
+                      step="100"
+                      placeholder="if applicable"
+                      value={partnerIncome}
+                      onChange={e => setPartnerIncome(e.target.value)}
+                      disabled={busy}
+                      style={{ paddingLeft: '1.75rem' }}
+                      className={inputNormal}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Occupants */}
+              <div className="sm:w-1/2">
+                <label htmlFor="num_occupants" className="block text-sm font-medium text-zinc-800 mb-1">
+                  Number of adults moving in
+                </label>
+                <input
+                  id="num_occupants"
+                  type="number"
+                  min="1"
+                  step="1"
+                  placeholder="e.g. 2"
+                  value={numOccupants}
+                  onChange={e => setNumOccupants(e.target.value)}
+                  disabled={busy}
+                  className={inputNormal}
+                />
+              </div>
+
+              {/* Guarantor + Pets */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-zinc-800 mb-2">Guarantor available?</p>
+                  <RadioGroup
+                    name="guarantor_available"
+                    value={guarantorAvailable}
+                    onChange={setGuarantorAvailable}
+                    disabled={busy}
+                  />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-zinc-800 mb-2">Do you have pets?</p>
+                  <RadioGroup
+                    name="pets"
+                    value={pets}
+                    onChange={setPets}
+                    disabled={busy}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 

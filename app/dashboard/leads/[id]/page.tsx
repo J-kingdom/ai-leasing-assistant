@@ -1,14 +1,44 @@
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
-import type { Lead } from '@/lib/types'
+import type { AffordabilityStatus, IntentStatus, Lead } from '@/lib/types'
 import { CopyButton } from './CopyButton'
 import { LeadActions } from './LeadActions'
 import { ReplyCard } from './ReplyCard'
 
-const statusStyles: Record<Lead['qualification_status'], string> = {
+const intentStyles: Record<IntentStatus, string> = {
   pending:     'bg-zinc-50 text-zinc-600 ring-1 ring-inset ring-zinc-500/20',
-  qualified:   'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20',
-  unqualified: 'bg-red-50 text-red-600 ring-1 ring-inset ring-red-500/20',
+  high_intent: 'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20',
+  needs_info:  'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-500/20',
+  low_fit:     'bg-red-50 text-red-600 ring-1 ring-inset ring-red-500/20',
+}
+
+const intentLabels: Record<IntentStatus, string> = {
+  pending:     'Pending',
+  high_intent: 'High Intent',
+  needs_info:  'Needs Info',
+  low_fit:     'Low Fit',
+}
+
+const affordabilityStyles: Record<AffordabilityStatus, string> = {
+  pass:    'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20',
+  maybe:   'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-500/20',
+  fail:    'bg-red-50 text-red-600 ring-1 ring-inset ring-red-500/20',
+  unknown: 'bg-zinc-50 text-zinc-500 ring-1 ring-inset ring-zinc-400/20',
+}
+
+const affordabilityLabels: Record<AffordabilityStatus, string> = {
+  pass:    'Pass',
+  maybe:   'Maybe',
+  fail:    'Fail',
+  unknown: 'Unknown',
+}
+
+const employmentLabels: Record<string, string> = {
+  employed:    'Employed',
+  self_employed: 'Self-employed',
+  student:     'Student',
+  unemployed:  'Not employed',
+  retired:     'Retired',
 }
 
 function scoreColor(score: number): string {
@@ -82,8 +112,13 @@ export default async function LeadDetailPage({
     .join('')
     .toUpperCase()
 
-  const hasMissing = Array.isArray(l.missing_information) && l.missing_information.length > 0
+  const hasMissing  = Array.isArray(l.missing_information) && l.missing_information.length > 0
   const hasAnalysis = !!(l.summary || l.qualification_notes || l.recommended_next_action)
+
+  const householdIncome =
+    l.applicant_income != null || l.partner_income != null
+      ? (l.applicant_income ?? 0) + (l.partner_income ?? 0)
+      : null
 
   return (
     <main className="min-h-screen bg-zinc-50">
@@ -96,8 +131,11 @@ export default async function LeadDetailPage({
         {/* Page header */}
         <div className="mt-6 mb-8 flex flex-wrap items-center gap-3">
           <h1 className="text-2xl font-semibold text-zinc-900">{l.name}</h1>
-          <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${statusStyles[l.qualification_status]}`}>
-            {l.qualification_status}
+          <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${intentStyles[l.intent_status]}`}>
+            {intentLabels[l.intent_status]}
+          </span>
+          <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${affordabilityStyles[l.affordability_status]}`}>
+            {affordabilityLabels[l.affordability_status]} affordability
           </span>
           <span className="ml-auto text-xs tabular-nums text-zinc-400">{dateFormatted}</span>
         </div>
@@ -113,8 +151,7 @@ export default async function LeadDetailPage({
               <p className="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-zinc-400 border-b border-zinc-100">
                 Enquiry
               </p>
-              <div className="p-6 space-y-6">
-                {/* Lead message */}
+              <div className="p-6">
                 <div className="flex gap-3">
                   <div className="shrink-0 w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center text-xs font-semibold text-zinc-600">
                     {initials}
@@ -129,7 +166,6 @@ export default async function LeadDetailPage({
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
 
@@ -156,14 +192,12 @@ export default async function LeadDetailPage({
                       <p className="text-sm text-zinc-800 leading-relaxed">{l.summary}</p>
                     </div>
                   )}
-
                   {l.qualification_notes && (
                     <div>
                       <p className="text-xs font-medium text-zinc-400 mb-1.5">Notes</p>
                       <p className="text-sm text-zinc-800 leading-relaxed">{l.qualification_notes}</p>
                     </div>
                   )}
-
                   {hasMissing && (
                     <div>
                       <p className="text-xs font-medium text-zinc-400 mb-2">Missing information</p>
@@ -182,7 +216,6 @@ export default async function LeadDetailPage({
                       </div>
                     </div>
                   )}
-
                   {l.recommended_next_action && (
                     <div>
                       <p className="text-xs font-medium text-zinc-400 mb-1.5">Recommended next action</p>
@@ -248,9 +281,43 @@ export default async function LeadDetailPage({
                 </div>
               </SidebarCard>
 
+              {/* Affordability details */}
+              <SidebarCard title="Affordability">
+                <div className="space-y-3">
+                  <DetailRow
+                    label="Employment"
+                    value={l.employment_status ? (employmentLabels[l.employment_status] ?? l.employment_status) : '—'}
+                  />
+                  <DetailRow
+                    label="Applicant income"
+                    value={l.applicant_income != null ? `£${l.applicant_income.toLocaleString()} pcm` : '—'}
+                  />
+                  <DetailRow
+                    label="Partner income"
+                    value={l.partner_income != null ? `£${l.partner_income.toLocaleString()} pcm` : '—'}
+                  />
+                  <DetailRow
+                    label="Household income"
+                    value={householdIncome != null ? `£${householdIncome.toLocaleString()} pcm` : '—'}
+                  />
+                  <DetailRow
+                    label="Guarantor"
+                    value={l.guarantor_available === true ? 'Available' : l.guarantor_available === false ? 'No' : '—'}
+                  />
+                  <DetailRow
+                    label="Occupants"
+                    value={l.num_occupants ?? '—'}
+                  />
+                  <DetailRow
+                    label="Pets"
+                    value={l.pets === true ? 'Yes' : l.pets === false ? 'No' : '—'}
+                  />
+                </div>
+              </SidebarCard>
+
               {/* Actions */}
               <SidebarCard title="Actions">
-                <LeadActions leadId={l.id} currentStatus={l.qualification_status} />
+                <LeadActions leadId={l.id} currentStatus={l.intent_status} />
               </SidebarCard>
 
             </div>

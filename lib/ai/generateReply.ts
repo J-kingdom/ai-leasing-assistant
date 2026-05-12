@@ -31,6 +31,12 @@ Rules:
 - Return JSON with exactly one key: { "reply": string }`
 }
 
+function fmtBool(v: boolean | null, yes: string, no: string) {
+  if (v === true)  return yes
+  if (v === false) return no
+  return 'not stated'
+}
+
 function buildUserPrompt(lead: Lead): string {
   return `Write a reply to this lettings enquiry:
 
@@ -42,6 +48,12 @@ Context:
 - Budget: ${lead.budget != null ? `£${lead.budget} pcm` : 'not specified'}
 - Move-in date: ${lead.move_in_date ?? 'not specified'}
 - Phone: ${lead.phone ?? 'not provided'}
+- Employment status: ${lead.employment_status ?? 'not stated'}
+- Monthly income (applicant): ${lead.applicant_income != null ? `£${lead.applicant_income}` : 'not provided'}
+- Monthly income (partner): ${lead.partner_income != null ? `£${lead.partner_income}` : 'not provided'}
+- Guarantor available: ${fmtBool(lead.guarantor_available, 'Yes', 'No')}
+- Pets: ${fmtBool(lead.pets, 'Yes', 'No')}
+- Affordability assessment: ${lead.affordability_status}
 
 Return JSON only: { "reply": "..." }`
 }

@@ -1,6 +1,10 @@
+export type IntentStatus       = 'high_intent' | 'needs_info' | 'low_fit' | 'pending'
+export type AffordabilityStatus = 'pass' | 'maybe' | 'fail' | 'unknown'
+
 export type QualifyLeadResult =
   | {
-      qualification_status: 'qualified' | 'unqualified'
+      intent_status: 'high_intent' | 'needs_info' | 'low_fit'
+      affordability_status: AffordabilityStatus
       qualification_score: number
       summary: string
       qualification_notes: string
@@ -9,7 +13,8 @@ export type QualifyLeadResult =
       recommended_next_action: string
     }
   | {
-      qualification_status: 'pending'
+      intent_status: 'pending'
+      affordability_status: null
       qualification_score: null
       summary: null
       qualification_notes: null
@@ -30,11 +35,21 @@ export type Lead = {
   budget: number | null
   move_in_date: string | null
   source: string | null
+  // Legacy field — kept in DB, written by manual overrides only
   qualification_status: 'pending' | 'qualified' | 'unqualified'
   qualification_score: number | null
   qualification_notes: string | null
   missing_information: string[] | null
   suggested_reply: string | null
   recommended_next_action: string | null
+  // New qualification model
+  intent_status: IntentStatus
+  affordability_status: AffordabilityStatus
+  applicant_income: number | null
+  partner_income: number | null
+  guarantor_available: boolean | null
+  num_occupants: number | null
+  pets: boolean | null
+  employment_status: string | null
   created_at: string
 }

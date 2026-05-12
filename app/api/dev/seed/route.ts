@@ -10,24 +10,32 @@ export async function POST() {
   const daysAgo = (n: number) => new Date(now - n * 86_400_000).toISOString()
 
   const leads = [
-    // ── Qualified ──────────────────────────────────────────────────────────────
+    // ── High Intent ────────────────────────────────────────────────────────────
     {
       name: 'Sarah Mitchell',
       email: 'sarah.mitchell@example.com',
       phone: '07712 345678',
       message:
-        "Hi, I'm looking for a 2-bedroom flat in Clapham or Brixton. My partner and I are both working in finance with a combined income of around £95,000. We can provide references from our current landlord and employer. Looking to move in around mid-June. Budget is up to £2,200 pcm.",
+        "Hi, I'm looking for a 2-bedroom flat in Clapham or Brixton. My partner and I are both working in finance. Looking to move in around mid-June. Budget is up to £2,200 pcm.",
       raw_message: null,
       property_interest: '2-bed flat, Clapham or Brixton',
       budget: 2200,
       move_in_date: '2026-06-15',
       source: 'web_form',
+      employment_status: 'employed',
+      applicant_income: 4500,
+      partner_income: 3500,
+      num_occupants: 2,
+      guarantor_available: false,
+      pets: false,
       qualification_status: 'qualified',
-      qualification_score: 82,
+      intent_status: 'high_intent',
+      affordability_status: 'pass',
+      qualification_score: 85,
       summary:
-        'Professional couple with strong combined income seeking 2-bed in South London. Clear budget, confirmed timeline, and references available.',
+        'Professional couple with strong combined household income of £8,000 pcm seeking 2-bed in South London. Budget £2,200 pcm is well within affordability range (2.5× = £5,500 required). Clear timeline, references available.',
       qualification_notes:
-        'High-intent lead. Combined income well above typical 30× rent threshold. References available, move-in date confirmed. Low referencing risk.',
+        'Household income (£8,000 pcm) is 3.6× the rent — comfortably above the 2.5× threshold. Both employed, no pets, no guarantor needed. Move-in date confirmed. Low referencing risk.',
       missing_information: [],
       suggested_reply:
         "Dear Sarah, thank you for your enquiry. Your profile looks excellent — we have several 2-bedroom flats in Clapham and Brixton that match your budget and timeline. I'd love to arrange viewings at your convenience. Could you let me know which days work best over the next two weeks?",
@@ -39,25 +47,65 @@ export async function POST() {
       email: 'james.obrien@example.com',
       phone: '07834 901234',
       message:
-        "I'm an NHS nurse relocating to Manchester for a new post at MRI Hospital. Looking for a 1-bedroom apartment in the city centre — Northern Quarter or Ancoats preferred. Budget around £950 pcm, flexible by £50 or so. Can move in from 1st June.",
+        "I'm an NHS nurse relocating to Manchester for a new post at MRI Hospital. Looking for a 1-bedroom apartment in the city centre — Northern Quarter or Ancoats preferred. Budget around £950 pcm, flexible by £50. Can move in from 1st June.",
       raw_message: null,
       property_interest: '1-bed flat, Northern Quarter or Ancoats',
       budget: 950,
       move_in_date: '2026-06-01',
       source: 'web_form',
+      employment_status: 'employed',
+      applicant_income: 2800,
+      partner_income: null,
+      num_occupants: 1,
+      guarantor_available: false,
+      pets: false,
       qualification_status: 'qualified',
-      qualification_score: 71,
+      intent_status: 'high_intent',
+      affordability_status: 'pass',
+      qualification_score: 74,
       summary:
-        'Relocating NHS professional seeking 1-bed in Manchester city centre. Clear budget and move-in date, stable public sector employment.',
+        'Relocating NHS professional seeking 1-bed in Manchester city centre. Monthly income of £2,800 pcm comfortably exceeds 2.5× rent requirement (£2,375). Clear budget and move-in date.',
       qualification_notes:
-        'Good intent with confirmed employment. NHS salary typically meets affordability at this rent level. Flexible on exact budget by £50.',
-      missing_information: ['Employment contract or offer letter for referencing'],
+        'Income-to-rent ratio: £2,800 ÷ £950 = 2.95× — above threshold. Stable NHS employment. Flexible budget helps. Offer letter or contract needed for referencing.',
+      missing_information: ['Employment contract or NHS offer letter for referencing'],
       suggested_reply:
-        "Hi James, welcome to Manchester! We have a great selection of 1-bedroom apartments in the Northern Quarter and Ancoats within your budget. As an NHS worker you may also be eligible for our key worker referral. I'll send over a shortlist — are you available for a video call or viewing before your move date?",
+        "Hi James, welcome to Manchester! We have a great selection of 1-bedroom apartments in the Northern Quarter and Ancoats within your budget. As an NHS worker you may be eligible for our key worker referral. I'll send over a shortlist — are you available for a video call or viewing before your move date?",
       recommended_next_action: 'Send property shortlist and request employment contract for referencing',
       created_at: daysAgo(6),
     },
-    // ── Unqualified ────────────────────────────────────────────────────────────
+    // ── Needs Info ─────────────────────────────────────────────────────────────
+    {
+      name: 'Amira Hassan',
+      email: 'amira.hassan@example.com',
+      phone: '07701 234567',
+      message:
+        "Hi, I'm looking for a 2-bedroom flat in Manchester, ideally close to the University of Manchester or in Fallowfield. I'm finishing my PhD in September and starting a lecturing position in October. Budget is £1,100 pcm and I'm happy to provide a guarantor if needed.",
+      raw_message: null,
+      property_interest: '2-bed flat, Fallowfield or near University of Manchester',
+      budget: 1100,
+      move_in_date: '2026-09-15',
+      source: 'web_form',
+      employment_status: 'student',
+      applicant_income: null,
+      partner_income: null,
+      num_occupants: null,
+      guarantor_available: true,
+      pets: false,
+      qualification_status: 'pending',
+      intent_status: 'needs_info',
+      affordability_status: 'maybe',
+      qualification_score: 55,
+      summary:
+        'PhD student transitioning to lecturing role. Clear property need and location. Guarantor available, but income not yet stated — affordability unverifiable until salary confirmed.',
+      qualification_notes:
+        'Strong intent and specific requirements. Guarantor availability is positive. However, lecturing salary not provided — cannot confirm income ≥ 2.5× rent (£2,750 needed). Student status complicates referencing pre-employment.',
+      missing_information: ['Confirmed starting salary for lecturing role', 'Guarantor details (name, income, address)'],
+      suggested_reply:
+        "Hi Amira, congratulations on your upcoming lecturing position! We have some great options in Fallowfield and near the University. To progress your application, could you share your confirmed starting salary and your guarantor's details? That will help us move quickly ahead of your September move-in.",
+      recommended_next_action: 'Request confirmed salary and guarantor details before progressing viewings',
+      created_at: daysAgo(3),
+    },
+    // ── Low Fit ────────────────────────────────────────────────────────────────
     {
       name: 'Priya Sharma',
       email: 'priya.sharma@example.com',
@@ -69,16 +117,24 @@ export async function POST() {
       budget: null,
       move_in_date: null,
       source: 'web_form',
+      employment_status: null,
+      applicant_income: null,
+      partner_income: null,
+      num_occupants: null,
+      guarantor_available: null,
+      pets: null,
       qualification_status: 'unqualified',
-      qualification_score: 22,
+      intent_status: 'low_fit',
+      affordability_status: 'unknown',
+      qualification_score: 18,
       summary:
-        'Speculative enquiry with no specific requirements, budget, or timeline. Low intent signal at this stage.',
+        'Speculative enquiry with no specific requirements, budget, or timeline. Affordability cannot be assessed.',
       qualification_notes:
-        'No budget, no move-in date, no property preference stated. Enquiry is exploratory. May be early in the search journey but cannot be progressed without more information.',
-      missing_information: ['Budget (pcm)', 'Move-in date', 'Property type and location preference', 'Employment or income details'],
+        'No budget, no income data, no move-in date, no property preference. Cannot determine affordability (unknown). Enquiry is casual browsing — not progessable without more information.',
+      missing_information: ['Budget (pcm)', 'Move-in date', 'Property type and location', 'Employment and income details'],
       suggested_reply:
-        "Hi Priya, thanks for reaching out! To help find the right property in Birmingham, it would be great to know a bit more — roughly what budget you have in mind, when you'd be looking to move, and what type of property you're after. Feel free to reply or give us a call.",
-      recommended_next_action: 'Send needs-qualification questionnaire; follow up in 5 days if no response',
+        "Hi Priya, thanks for reaching out! To help find the right property in Birmingham, it would be great to know your budget, when you'd like to move, and what type of property you're after. Feel free to reply or pop your details into our enquiry form.",
+      recommended_next_action: 'Send brief needs-qualification email; follow up in 7 days if no response',
       created_at: daysAgo(4),
     },
     {
@@ -92,38 +148,25 @@ export async function POST() {
       budget: 1400,
       move_in_date: '2026-07-11',
       source: 'web_form',
+      employment_status: 'self_employed',
+      applicant_income: null,
+      partner_income: null,
+      num_occupants: 3,
+      guarantor_available: false,
+      pets: false,
       qualification_status: 'unqualified',
-      qualification_score: 35,
+      intent_status: 'low_fit',
+      affordability_status: 'fail',
+      qualification_score: 28,
       summary:
-        'Group of freelancers seeking 3-bed in Shoreditch at a budget significantly below market rate. Affordability and referencing present high risk.',
+        'Group of freelancers seeking 3-bed in Shoreditch at a budget far below market rate. Affordability fails: income not provided, budget not viable for area, no guarantor.',
       qualification_notes:
-        'Budget of £1,400 pcm is well below the Shoreditch market for a 3-bed (typically £3,000–£4,500+). Freelance income complicates referencing without 12 months of accounts. High risk of application failure without guarantors or budget flexibility.',
-      missing_information: ['Proof of freelance income (SA302 or 12 months bank statements)', 'Guarantor details', 'Willingness to increase budget or adjust location'],
+        'Budget of £1,400 pcm is well below the Shoreditch 3-bed market (£3,000–£4,500+). Freelance income uncomfirmed — affordability marked fail due to clear budget mismatch and no guarantor. Would need 12 months accounts to reference. High risk.',
+      missing_information: ['Freelance income proof (SA302 or 12 months bank statements)', 'Guarantor details', 'Realistic budget or alternative location'],
       suggested_reply:
-        "Hi Marcus, thanks for your enquiry. I want to be transparent — a 3-bedroom property in Shoreditch at £1,400 pcm will be very difficult, as prices typically start from £2,800. We may be able to help with options in nearby areas at your budget. As freelancers, you'd also need to provide 12 months of accounts or a guarantor. Would you like to explore alternatives?",
+        "Hi Marcus, thanks for your enquiry. I want to be upfront — a 3-bedroom property in Shoreditch at £1,400 pcm is very difficult as prices typically start from £2,800. We may be able to help with alternatives in nearby areas. As self-employed applicants, you'd also need 12 months of accounts or a guarantor. Would you like to explore other options?",
       recommended_next_action: 'Call to discuss budget gap and alternative East London areas; request income documentation',
       created_at: daysAgo(2),
-    },
-    // ── Pending ────────────────────────────────────────────────────────────────
-    {
-      name: 'Amira Hassan',
-      email: 'amira.hassan@example.com',
-      phone: '07701 234567',
-      message:
-        "Hi, I'm looking for a 2-bedroom flat in Manchester, ideally close to the University of Manchester or in Fallowfield. I'm finishing my PhD in September and starting a lecturing position at the university in October. Budget is £1,100 pcm and I'm happy to provide a guarantor if needed.",
-      raw_message: null,
-      property_interest: '2-bed flat, Fallowfield or near University of Manchester',
-      budget: 1100,
-      move_in_date: '2026-09-15',
-      source: 'web_form',
-      qualification_status: 'pending',
-      qualification_score: null,
-      summary: null,
-      qualification_notes: null,
-      missing_information: null,
-      suggested_reply: null,
-      recommended_next_action: null,
-      created_at: daysAgo(0),
     },
   ]
 

@@ -23,10 +23,12 @@ export async function POST(request: Request) {
     .from('leads')
     .insert({
       ...result.data,
+      intent_status:        'pending' as const,
+      affordability_status: 'unknown' as const,
       qualification_status: 'pending' as const,
-      qualification_score: null,
-      qualification_notes: null,
-      summary: null,
+      qualification_score:  null,
+      qualification_notes:  null,
+      summary:              null,
       recommended_next_action: null,
     })
     .select()

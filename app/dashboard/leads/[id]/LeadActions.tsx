@@ -2,24 +2,29 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-
-type Status = 'qualified' | 'unqualified' | 'pending'
+import type { IntentStatus } from '@/lib/types'
 
 const STATUS_BUTTONS: {
-  status: Status
+  status: IntentStatus
   label: string
   activeClass: string
   inactiveClass: string
 }[] = [
   {
-    status: 'qualified',
-    label: 'Mark Qualified',
+    status: 'high_intent',
+    label: 'Mark High Intent',
     activeClass: 'border-green-200 bg-green-50 text-green-700 opacity-40 cursor-default',
     inactiveClass: 'border-green-200 bg-green-50 text-green-700 hover:bg-green-100',
   },
   {
-    status: 'unqualified',
-    label: 'Mark Unqualified',
+    status: 'needs_info',
+    label: 'Mark Needs Info',
+    activeClass: 'border-amber-200 bg-amber-50 text-amber-700 opacity-40 cursor-default',
+    inactiveClass: 'border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100',
+  },
+  {
+    status: 'low_fit',
+    label: 'Mark Low Fit',
     activeClass: 'border-red-200 bg-red-50 text-red-700 opacity-40 cursor-default',
     inactiveClass: 'border-red-200 bg-red-50 text-red-700 hover:bg-red-100',
   },
@@ -36,21 +41,21 @@ export function LeadActions({
   currentStatus,
 }: {
   leadId: string
-  currentStatus: Status
+  currentStatus: IntentStatus
 }) {
   const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError]     = useState<string | null>(null)
   const busy = loading !== null
 
-  async function setStatus(status: Status) {
+  async function setStatus(status: IntentStatus) {
     setLoading(status)
     setError(null)
     try {
       const res = await fetch(`/api/leads/${leadId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ qualification_status: status }),
+        body: JSON.stringify({ intent_status: status }),
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
