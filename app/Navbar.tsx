@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 const navLinks = [
   { label: 'Dashboard', href: '/dashboard' },
@@ -10,6 +11,14 @@ const navLinks = [
 
 export function Navbar() {
   const pathname = usePathname()
+  const router   = useRouter()
+  const onDashboard = pathname.startsWith('/dashboard')
+
+  async function handleSignOut() {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
 
   return (
     <header className="sticky top-0 z-50 h-14 flex items-center border-b border-zinc-800 bg-zinc-950">
@@ -35,6 +44,14 @@ export function Navbar() {
             )
           })}
         </nav>
+        {onDashboard && (
+          <button
+            onClick={handleSignOut}
+            className="ml-auto text-sm text-zinc-400 hover:text-white transition-colors"
+          >
+            Sign out
+          </button>
+        )}
       </div>
     </header>
   )
