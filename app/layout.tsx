@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Leasing Assistant",
-  description: "AI-powered leasing lead management",
+  title: "LettingsCopilot",
+  description: "AI-powered lettings lead management",
 };
 
 export default function RootLayout({

@@ -89,7 +89,7 @@ export default function Home() {
             Qualify every lead.<br />Reply in seconds.
           </h1>
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            AI Leasing Assistant automatically scores inbound tenant enquiries, surfaces missing
+            LettingsCopilot automatically scores inbound tenant enquiries, surfaces missing
             information, and drafts personalised replies — so your team focuses on the right leads.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
@@ -285,7 +285,7 @@ export default function Home() {
       <footer className="bg-zinc-950 border-t border-zinc-800">
         <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
-            <p className="text-sm font-semibold text-white">AI Leasing Assistant</p>
+            <p className="text-sm font-semibold text-white">LettingsCopilot</p>
             <p className="text-sm text-zinc-500 mt-0.5">AI-powered lettings lead management</p>
           </div>
           <nav className="flex items-center gap-6">
@@ -295,7 +295,7 @@ export default function Home() {
         </div>
         <div className="border-t border-zinc-800">
           <div className="max-w-6xl mx-auto px-6 py-4">
-            <p className="text-xs text-zinc-600">© 2026 AI Leasing Assistant</p>
+            <p className="text-xs text-zinc-600">© 2026 LettingsCopilot</p>
           </div>
         </div>
       </footer>

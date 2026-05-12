@@ -15,7 +15,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 h-14 flex items-center border-b border-zinc-800 bg-zinc-950">
       <div className="flex items-center gap-8 w-full max-w-7xl mx-auto px-8">
         <span className="text-sm font-semibold tracking-tight text-white">
-          AI Leasing Assistant
+          LettingsCopilot
         </span>
         <nav className="flex items-center gap-1">
           {navLinks.map(({ label, href }) => {
