@@ -100,12 +100,12 @@ export default function Home() {
             flagging missing income data, guarantor gaps, and low-fit leads before your team wastes time on them.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              href="mailto:hello@lettingscopilot.com"
+            <a
+              href="mailto:joseph@lettingscopilot.com?subject=LettingsCopilot%20Demo%20Request"
               className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
             >
               Book a Demo
-            </Link>
+            </a>
             <Link
               href="/dashboard"
               className="rounded-lg border border-zinc-700 bg-zinc-800 px-5 py-2.5 text-sm font-medium text-zinc-200 hover:bg-zinc-700 transition-colors"
@@ -274,12 +274,12 @@ export default function Home() {
             Intent assessed. Affordability surfaced. Reply drafted. All in seconds.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              href="mailto:hello@lettingscopilot.com"
+            <a
+              href="mailto:joseph@lettingscopilot.com?subject=LettingsCopilot%20Demo%20Request"
               className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
             >
               Book a Demo
-            </Link>
+            </a>
             <Link
               href="/dashboard"
               className="rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
