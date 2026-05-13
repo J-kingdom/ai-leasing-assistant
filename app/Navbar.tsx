@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -21,10 +22,18 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 h-14 flex items-center border-b border-zinc-800 bg-zinc-950">
-      <div className="flex items-center gap-8 w-full max-w-7xl mx-auto px-8">
-        <Link href="/" className="text-sm font-semibold tracking-tight text-white hover:text-zinc-300 transition-colors">
-          LettingsCopilot
+    <header className="sticky top-0 z-50 h-16 flex items-center border-b border-zinc-800 bg-zinc-950">
+      <div className="flex items-center gap-10 w-full max-w-7xl mx-auto px-8">
+        <Link href="/" className="shrink-0 flex items-center">
+          <Image
+            src="/logo.png.png"
+            alt="LettingsCopilot"
+            height={40}
+            width={240}
+            className="h-10 w-auto"
+            sizes="240px"
+            priority
+          />
         </Link>
         <nav className="flex items-center gap-1">
           {navLinks.map(({ label, href }) => {
