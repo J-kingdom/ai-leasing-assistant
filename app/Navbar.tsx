@@ -23,15 +23,15 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 h-16 flex items-center border-b border-zinc-800 bg-zinc-950">
-      <div className="flex items-center gap-10 w-full max-w-7xl mx-auto px-8">
+      <div className="flex items-center gap-12 w-full max-w-7xl mx-auto px-8">
         <Link href="/" className="shrink-0 flex items-center">
           <Image
             src="/logo.png.png"
             alt="LettingsCopilot"
-            height={40}
-            width={240}
-            className="h-10 w-auto"
-            sizes="240px"
+            height={48}
+            width={288}
+            className="h-12 w-auto"
+            sizes="288px"
             priority
           />
         </Link>
@@ -42,7 +42,7 @@ export function Navbar() {
               <Link
                 key={href}
                 href={href}
-                className={`px-3 py-1.5 rounded-md text-sm transition-colors ${
+                className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
                   active
                     ? 'bg-zinc-800 text-white'
                     : 'text-zinc-400 hover:bg-zinc-800/60 hover:text-white'
