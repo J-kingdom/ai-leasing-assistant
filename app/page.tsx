@@ -188,6 +188,35 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Product Demo ─────────────────────────────────────────── */}
+      <section className="bg-zinc-50 px-6 py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">Product Demo</p>
+            <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-4">
+              See LettingsCopilot in action
+            </h2>
+            <p className="text-base text-zinc-500 max-w-2xl mx-auto leading-relaxed">
+              A quick walkthrough of how agencies can assess tenant intent, review affordability signals, and generate contextual replies in seconds.
+            </p>
+          </div>
+
+          <div className="rounded-xl overflow-hidden border border-zinc-200 shadow-lg">
+            <div className="aspect-video w-full">
+              <iframe
+                src="https://www.youtube.com/embed/dkVJO2DyRT0"
+                title="LettingsCopilot product demo"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
+          </div>
+
+          <p className="mt-4 text-center text-xs text-zinc-400">3-minute founder walkthrough</p>
+        </div>
+      </section>
+
       {/* ── Mock Dashboard ───────────────────────────────────────── */}
       <section className="bg-zinc-950 px-6 py-20">
         <div className="max-w-6xl mx-auto">
